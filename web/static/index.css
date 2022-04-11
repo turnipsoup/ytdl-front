@@ -1,4 +1,13 @@
-.test {
+/* Main holder */
+.holder {
+    margin:  auto;
+    width: 600px;
+    border: solid black;
+}
+
+/* Text */
+.title {
     margin:  auto;
     text-align: center;
+    padding: 5px;
 }

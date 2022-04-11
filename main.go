@@ -40,6 +40,21 @@ func main() {
 		fmt.Fprintln(w, webIndex)
 	})
 
+	http.HandleFunc("/push", func(w http.ResponseWriter, r *http.Request) {
+		// parse request payload
+		// Content-Type: application/x-www-form-urlencoded
+		log.Print(fmt.Sprintf("Submission recieved: %s", r.Form))
+
+		if err := r.ParseForm(); err != nil {
+			fmt.Fprintf(w, "ParseForm() err: %v", err)
+			return
+		}
+
+		ytId := r.Form["yt-id"][0]
+
+		log.Print(fmt.Sprintf("Processing request for YT-ID %s", ytId))
+	})
+
 	// Listen on port
 	log.Print("Listening on port 5050")
 
