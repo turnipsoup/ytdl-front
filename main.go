@@ -43,7 +43,7 @@ func main() {
 	http.HandleFunc("/push", func(w http.ResponseWriter, r *http.Request) {
 		// parse request payload
 		// Content-Type: application/x-www-form-urlencoded
-		log.Print(fmt.Sprintf("Submission recieved: %s", r.Form))
+		log.Print("Submission recieved on /push")
 
 		if err := r.ParseForm(); err != nil {
 			fmt.Fprintf(w, "ParseForm() err: %v", err)
@@ -53,6 +53,8 @@ func main() {
 		ytId := r.Form["yt-id"][0]
 
 		log.Print(fmt.Sprintf("Processing request for YT-ID %s", ytId))
+
+		http.Redirect(w, r, "/", 302)
 	})
 
 	// Listen on port
