@@ -1,7 +1,8 @@
 package main
 
 //
-// Handles the web routes and embeded files, everything else is in its own package
+// Handles the web routes and embeded files,
+// everything else is in its own package
 //
 
 import (
@@ -16,13 +17,17 @@ import (
 //go:embed web/index.html
 var webIndex string
 
-//go:embed web
-var fileStrings embed.FS
+//go:embed web/static
+var staticFiles embed.FS
 
 // Main
 
 func main() {
 	log.Print("Starting application")
+
+	// Get and handle static files
+	http.Handle("/static/", http.StripPrefix("/static/",
+		http.FileServer(http.FS(staticFiles))))
 
 	// Getting the root of the application
 
