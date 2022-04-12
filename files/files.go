@@ -7,9 +7,7 @@ import (
 )
 
 // Reading the files present in the storage area
-func GetCurrentlyDownloading() {
-	rootDirectory := "/data/shared/music/YouTube/"
-	fmt.Println(rootDirectory)
+func GetCurrentlyDownloading(rootDirectory string) {
 
 	genres, err := ioutil.ReadDir(rootDirectory)
 

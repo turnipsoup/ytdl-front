@@ -7,7 +7,9 @@ package main
 
 import (
 	"embed"
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 
@@ -15,6 +17,30 @@ import (
 )
 
 // Read config.json
+
+type Config struct {
+	RootDirectory string `json:"storage_root"`
+}
+
+// Let's first read the `config.json` file
+func getConfiguration() Config {
+	content, err := ioutil.ReadFile("./config.json")
+
+	if err != nil {
+		log.Fatal("Error when opening configuration file: ", err)
+	}
+
+	// Now let's unmarshall the data into `payload`
+	var config Config
+
+	err = json.Unmarshal(content, &config)
+
+	if err != nil {
+		log.Fatal("Error during Unmarshal(): ", err)
+	}
+
+	return config
+}
 
 // Files embedded into the binary for easy deployment (static stuff)
 
@@ -28,6 +54,8 @@ var staticFiles embed.FS
 
 func main() {
 	log.Print("Starting application")
+
+	config := getConfiguration()
 
 	// Get and handle static files
 	http.Handle("/static/", http.StripPrefix("/static/",
@@ -63,7 +91,7 @@ func main() {
 
 	http.HandleFunc("/current", func(w http.ResponseWriter, r *http.Request) {
 		log.Print("Fetching current history")
-		files.GetCurrentlyDownloading()
+		files.GetCurrentlyDownloading(config.RootDirectory)
 
 	})
 
