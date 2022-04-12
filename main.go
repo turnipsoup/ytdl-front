@@ -14,6 +14,7 @@ import (
 	"net/http"
 
 	"letseatlabs/ytdl-front/files"
+	"letseatlabs/ytdl-front/yt"
 )
 
 // Read config.json
@@ -72,6 +73,8 @@ func main() {
 		fmt.Fprintln(w, webIndex)
 	})
 
+	// Submitting POST requests to download
+
 	http.HandleFunc("/push", func(w http.ResponseWriter, r *http.Request) {
 		// parse request payload
 		// Content-Type: application/x-www-form-urlencoded
@@ -85,6 +88,7 @@ func main() {
 		ytId := r.Form["yt-id"][0]
 
 		log.Print(fmt.Sprintf("Processing request for YT-ID %s", ytId))
+		go yt.DownloadVideoAudio(ytId, config.RootDirectory)
 
 		http.Redirect(w, r, "/", 302)
 	})
