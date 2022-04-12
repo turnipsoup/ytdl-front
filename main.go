@@ -8,6 +8,7 @@ package main
 import (
 	"embed"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 )
@@ -19,6 +20,23 @@ var webIndex string
 
 //go:embed web/static
 var staticFiles embed.FS
+
+// Reading the files present in the storage area
+func getCurrentlyDownloading() {
+	rootDirectory := "/data/shared/music/YouTube/"
+	fmt.Println(rootDirectory)
+
+	genres, err := ioutil.ReadDir(rootDirectory)
+
+	if err != nil {
+		log.Println("Could not read root directory")
+		log.Println(err)
+	}
+
+	for t := range genres {
+		fmt.Println(genres[t].Name())
+	}
+}
 
 // Main
 
@@ -57,9 +75,19 @@ func main() {
 		http.Redirect(w, r, "/", 302)
 	})
 
+	http.HandleFunc("/current", func(w http.ResponseWriter, r *http.Request) {
+		log.Print("Fetching current history")
+		getCurrentlyDownloading()
+
+	})
+
 	// Listen on port
 	log.Print("Listening on port 5050")
 
-	http.ListenAndServe(":5050", nil)
+	err := http.ListenAndServe(":5050", nil)
 
+	if err != nil {
+		log.Println("Could not start application")
+		fmt.Println(err)
+	}
 }
