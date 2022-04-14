@@ -12,6 +12,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strings"
 
 	"letseatlabs/ytdl-front/files"
 	"letseatlabs/ytdl-front/yt"
@@ -67,7 +68,6 @@ func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		log.Print("Request recieved on /")
 		log.Print(r.UserAgent())
-		fmt.Println(files.GetAllGenres(config.RootDirectory))
 
 		// Ensure that the browser knows it is HTML
 		w.Header().Set("Content-Type", "text/html")
@@ -95,9 +95,25 @@ func main() {
 		http.Redirect(w, r, "/", 302)
 	})
 
+	// Returns a list of currently downloading files
 	http.HandleFunc("/current", func(w http.ResponseWriter, r *http.Request) {
 		log.Print("Fetching current history")
 		files.GetCurrentlyDownloading(config.RootDirectory)
+
+	})
+
+	// Returns a list of available genres
+	http.HandleFunc("/genres", func(w http.ResponseWriter, r *http.Request) {
+		genres := files.GetAllGenres(config.RootDirectory)
+		log.Printf("Fetched list of genres: %s", genres)
+
+		log.Println(genres)
+
+		// Convert the []string to a JSON array
+		genreJson := fmt.Sprintf("[\"%s\"]", strings.Join(genres, "\",\""))
+
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Fprintln(w, genreJson)
 
 	})
 
