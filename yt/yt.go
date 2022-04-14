@@ -3,6 +3,7 @@ package yt
 import (
 	"fmt"
 	"os/exec"
+	"strings"
 )
 
 // Take a ytId and return a full YouTube Video URL
@@ -12,7 +13,13 @@ func CreateYTUrl(ytId string) string {
 
 // Download the audio of the passed YouTube URL
 func DownloadVideoAudio(ytId string, rootDirectory string, genre string) {
+
 	url := CreateYTUrl(ytId)
+
+	// If the user passes an entire YouTube URL, accept that instead
+	if strings.Contains(ytId, "v=") {
+		url = ytId
+	}
 
 	directoryTemplate := "%(title)s.%(ext)s"
 	genreDirectory := fmt.Sprintf("%s/%s", rootDirectory, genre)
