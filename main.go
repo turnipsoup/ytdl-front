@@ -67,6 +67,7 @@ func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		log.Print("Request recieved on /")
 		log.Print(r.UserAgent())
+		fmt.Println(files.GetAllGenres(config.RootDirectory))
 
 		// Ensure that the browser knows it is HTML
 		w.Header().Set("Content-Type", "text/html")
@@ -86,9 +87,10 @@ func main() {
 		}
 
 		ytId := r.Form["yt-id"][0]
+		genre := "Game_OSTs"
 
 		log.Print(fmt.Sprintf("Processing request for YT-ID %s", ytId))
-		go yt.DownloadVideoAudio(ytId, config.RootDirectory)
+		go yt.DownloadVideoAudio(ytId, config.RootDirectory, genre)
 
 		http.Redirect(w, r, "/", 302)
 	})
