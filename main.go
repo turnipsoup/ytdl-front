@@ -87,7 +87,7 @@ func main() {
 		}
 
 		ytId := r.Form["yt-id"][0]
-		genre := "Game_OSTs"
+		genre := r.Form["genre"][0]
 
 		log.Print(fmt.Sprintf("Processing request for YT-ID %s", ytId))
 		go yt.DownloadVideoAudio(ytId, config.RootDirectory, genre)
