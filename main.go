@@ -62,6 +62,7 @@ func main() {
 
 	// Initialize the DB "connection"
 	yt.OpenDatabaseInit(config.DBLocation)
+	yt.GetAllDownloads(config.DBLocation)
 
 	// Get and handle static files
 	http.Handle("/static/", http.StripPrefix("/static/",
@@ -105,7 +106,44 @@ func main() {
 	// Returns a list of currently downloading files
 	http.HandleFunc("/current", func(w http.ResponseWriter, r *http.Request) {
 		log.Print("Fetching current history")
-		files.GetCurrentlyDownloading(config.RootDirectory)
+
+		var currentDownloads []string
+
+		rows := yt.GetAllDownloads(config.DBLocation)
+
+		for i := range rows {
+			if rows[i].Status != "Done" {
+				currentDownloads = append(currentDownloads, yt.RowToJSON(rows[i]))
+			}
+
+		}
+
+		innerJSON := strings.Join(currentDownloads, ",")
+
+		w.Header().Set("Content-Type", "application/json")
+
+		fmt.Fprintf(w, fmt.Sprintf("[%s]", innerJSON))
+
+	})
+
+	// Returns a list of all files in the db
+	http.HandleFunc("/history", func(w http.ResponseWriter, r *http.Request) {
+		log.Print("Fetching current history")
+
+		var currentDownloads []string
+
+		rows := yt.GetAllDownloads(config.DBLocation)
+
+		for i := range rows {
+			currentDownloads = append(currentDownloads, yt.RowToJSON(rows[i]))
+
+		}
+
+		innerJSON := strings.Join(currentDownloads, ",")
+
+		w.Header().Set("Content-Type", "application/json")
+
+		fmt.Fprintf(w, fmt.Sprintf("[%s]", innerJSON))
 
 	})
 

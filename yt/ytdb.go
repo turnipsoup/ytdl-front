@@ -2,11 +2,21 @@ package yt
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"log"
 
 	_ "github.com/mattn/go-sqlite3"
 )
+
+type ytRow struct {
+	Id        string
+	Status    string
+	StartTime int
+	EndTime   int
+	Url       string
+	Genre     string
+}
 
 //Open the database, create if it does not exist, create history table
 func OpenDatabaseInit(file_loc string) {
@@ -103,4 +113,49 @@ func MarkDownloadDone(dbLoc string, ytId string) {
 
 	tx.Commit()
 
+}
+
+// Returns all rows from theytdl tabls as an array of ytRows
+func GetAllDownloads(dbLoc string) []ytRow {
+
+	var ytRows []ytRow
+
+	db := OpenDatabase(dbLoc)
+	defer db.Close()
+
+	rows, err := db.Query("SELECT * FROM ytdl;")
+
+	if err != nil {
+		log.Println(err)
+	}
+
+	for rows.Next() {
+		var id string
+		var status string
+		var startTime int
+		var endTime int
+		var url string
+		var genre string
+		err = rows.Scan(&id, &startTime, &endTime, &url, &genre, &status)
+		if err != nil {
+			log.Println(err)
+		}
+		newRow := ytRow{id, status, startTime, endTime, url, genre}
+		ytRows = append(ytRows, newRow)
+	}
+
+	return ytRows
+
+}
+
+// Convers passed row into a JSON string
+func RowToJSON(row ytRow) string {
+	data, err := json.Marshal(row)
+
+	if err != nil {
+		log.Println("Error unpacking row")
+		log.Println(row)
+	}
+
+	return string(data)
 }
