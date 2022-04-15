@@ -27,7 +27,7 @@ func DownloadVideoAudio(dbLoc string, ytId string, rootDirectory string, genre s
 
 	cmd := exec.Command("yt-dlp", "-x", "-o", directoryString, url)
 
-	MarkDownloadDone(dbLoc, ytId)
-
 	cmd.Run()
+
+	MarkDownloadDone(dbLoc, ytId)
 }
