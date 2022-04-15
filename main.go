@@ -22,6 +22,7 @@ import (
 
 type Config struct {
 	RootDirectory string `json:"storage_root"`
+	DBLocation    string `json:"db_location"`
 }
 
 // Let's first read the `config.json` file
@@ -58,6 +59,9 @@ func main() {
 	log.Print("Starting application")
 
 	config := getConfiguration()
+
+	// Initialize the DB "connection"
+	yt.OpenDatabase(config.DBLocation)
 
 	// Get and handle static files
 	http.Handle("/static/", http.StripPrefix("/static/",

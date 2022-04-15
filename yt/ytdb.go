@@ -8,21 +8,26 @@ import (
 )
 
 //Open the database, create if it does not exist, create history table
-func openDatabase(file_loc string) {
+func OpenDatabase(file_loc string) {
 
-	db, err := sql.Open("sqlite3", "./ytdl-front.db")
+	log.Printf("Opening the database at %s\n", file_loc)
+
+	db, err := sql.Open("sqlite3", file_loc)
 	if err != nil {
+		log.Println("Could not create or open database")
 		log.Fatal(err)
 	}
+
 	defer db.Close()
 
 	sqlStmt := `
-	create table foo (id integer not null primary key, name text);
-	delete from foo;
+	create table ytdl (id text not null primary key, start_date int, end_date int, url text, status text);
+	commit;
 	`
 	_, err = db.Exec(sqlStmt)
+
 	if err != nil {
-		log.Printf("%q: %s\n", err, sqlStmt)
+		log.Printf("%s\n", err)
 		return
 	}
 
