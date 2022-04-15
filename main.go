@@ -61,7 +61,7 @@ func main() {
 	config := getConfiguration()
 
 	// Initialize the DB "connection"
-	yt.OpenDatabase(config.DBLocation)
+	yt.OpenDatabaseInit(config.DBLocation)
 
 	// Get and handle static files
 	http.Handle("/static/", http.StripPrefix("/static/",
@@ -92,6 +92,9 @@ func main() {
 
 		ytId := r.Form["yt-id"][0]
 		genre := r.Form["genre"][0]
+
+		// Insert our record
+		yt.InsertYTDLRecord(config.DBLocation, ytId, 0, 0, yt.CreateYTUrl(ytId), genre, "Active")
 
 		log.Print(fmt.Sprintf("Processing request for YT-ID %s", ytId))
 		go yt.DownloadVideoAudio(ytId, config.RootDirectory, genre)
