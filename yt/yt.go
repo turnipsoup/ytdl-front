@@ -12,7 +12,7 @@ func CreateYTUrl(ytId string) string {
 }
 
 // Download the audio of the passed YouTube URL
-func DownloadVideoAudio(ytId string, rootDirectory string, genre string) {
+func DownloadVideoAudio(dbLoc string, ytId string, rootDirectory string, genre string) {
 
 	url := CreateYTUrl(ytId)
 
@@ -26,6 +26,8 @@ func DownloadVideoAudio(ytId string, rootDirectory string, genre string) {
 	directoryString := fmt.Sprintf("%s/%s", genreDirectory, directoryTemplate)
 
 	cmd := exec.Command("yt-dlp", "-x", "-o", directoryString, url)
+
+	MarkDownloadDone(dbLoc, ytId)
 
 	cmd.Run()
 }

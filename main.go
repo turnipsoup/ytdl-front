@@ -97,7 +97,7 @@ func main() {
 		yt.InsertYTDLRecord(config.DBLocation, ytId, 0, 0, yt.CreateYTUrl(ytId), genre, "Active")
 
 		log.Print(fmt.Sprintf("Processing request for YT-ID %s", ytId))
-		go yt.DownloadVideoAudio(ytId, config.RootDirectory, genre)
+		go yt.DownloadVideoAudio(config.DBLocation, ytId, config.RootDirectory, genre)
 
 		http.Redirect(w, r, "/", 302)
 	})

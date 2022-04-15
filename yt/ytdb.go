@@ -2,6 +2,7 @@ package yt
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -51,6 +52,7 @@ func OpenDatabase(file_loc string) *sql.DB {
 // Inserts a record into the ytdl table
 func InsertYTDLRecord(dbLoc string, ytId string, startTime int, endTime int, url string, genre string, status string) {
 	db := OpenDatabase(dbLoc)
+	defer db.Close()
 
 	tx, err := db.Begin()
 
@@ -72,4 +74,33 @@ func InsertYTDLRecord(dbLoc string, ytId string, startTime int, endTime int, url
 	}
 
 	tx.Commit()
+}
+
+// Marks a record as 'Done' in the DB given an ID.
+func MarkDownloadDone(dbLoc string, ytId string) {
+	db := OpenDatabase(dbLoc)
+	defer db.Close()
+
+	tx, err := db.Begin()
+
+	if err != nil {
+		log.Println(err)
+	}
+
+	stmt, err := tx.Prepare(fmt.Sprintf("UPDATE ytdl SET status = 'Done' WHERE id = '%s'", ytId))
+
+	if err != nil {
+		log.Println(err)
+	}
+
+	defer stmt.Close()
+
+	_, err = stmt.Exec()
+
+	if err != nil {
+		log.Println(err)
+	}
+
+	tx.Commit()
+
 }
