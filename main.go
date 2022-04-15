@@ -22,6 +22,7 @@ import (
 
 type Config struct {
 	RootDirectory string `json:"storage_root"`
+	DBLocation    string `json:"db_location"`
 }
 
 // Let's first read the `config.json` file
@@ -59,6 +60,10 @@ func main() {
 
 	config := getConfiguration()
 
+	// Initialize the DB "connection"
+	yt.OpenDatabaseInit(config.DBLocation)
+	yt.GetAllDownloads(config.DBLocation)
+
 	// Get and handle static files
 	http.Handle("/static/", http.StripPrefix("/static/",
 		http.FileServer(http.FS(staticFiles))))
@@ -89,8 +94,11 @@ func main() {
 		ytId := r.Form["yt-id"][0]
 		genre := r.Form["genre"][0]
 
+		// Insert our record
+		yt.InsertYTDLRecord(config.DBLocation, ytId, 0, 0, yt.CreateYTUrl(ytId), genre, "Active")
+
 		log.Print(fmt.Sprintf("Processing request for YT-ID %s", ytId))
-		go yt.DownloadVideoAudio(ytId, config.RootDirectory, genre)
+		go yt.DownloadVideoAudio(config.DBLocation, ytId, config.RootDirectory, genre)
 
 		http.Redirect(w, r, "/", 302)
 	})
@@ -98,7 +106,44 @@ func main() {
 	// Returns a list of currently downloading files
 	http.HandleFunc("/current", func(w http.ResponseWriter, r *http.Request) {
 		log.Print("Fetching current history")
-		files.GetCurrentlyDownloading(config.RootDirectory)
+
+		var currentDownloads []string
+
+		rows := yt.GetAllDownloads(config.DBLocation)
+
+		for i := range rows {
+			if rows[i].Status != "Done" {
+				currentDownloads = append(currentDownloads, yt.RowToJSON(rows[i]))
+			}
+
+		}
+
+		innerJSON := strings.Join(currentDownloads, ",")
+
+		w.Header().Set("Content-Type", "application/json")
+
+		fmt.Fprintf(w, fmt.Sprintf("[%s]", innerJSON))
+
+	})
+
+	// Returns a list of all files in the db
+	http.HandleFunc("/history", func(w http.ResponseWriter, r *http.Request) {
+		log.Print("Fetching current history")
+
+		var currentDownloads []string
+
+		rows := yt.GetAllDownloads(config.DBLocation)
+
+		for i := range rows {
+			currentDownloads = append(currentDownloads, yt.RowToJSON(rows[i]))
+
+		}
+
+		innerJSON := strings.Join(currentDownloads, ",")
+
+		w.Header().Set("Content-Type", "application/json")
+
+		fmt.Fprintf(w, fmt.Sprintf("[%s]", innerJSON))
 
 	})
 

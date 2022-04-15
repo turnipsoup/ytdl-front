@@ -18,3 +18,15 @@
     margin:  auto;
     text-align: center;
 }
+
+/* Current Downloads */
+.current-downloads {
+    padding: 5px;
+    margin:  auto;
+    text-align: center;
+}
+
+.current-downloads td {
+    padding-left:  20px;
+    padding-right: 20px;
+}
