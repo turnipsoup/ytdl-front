@@ -3,6 +3,7 @@ package files
 import (
 	"io/ioutil"
 	"log"
+	"strings"
 )
 
 // Get all of the genres we can save to
@@ -15,7 +16,10 @@ func GetAllGenres(rootDirectory string) []string {
 	}
 
 	for i := range genreDirs {
-		genres = append(genres, genreDirs[i].Name())
+		if !strings.Contains(genreDirs[i].Name(), ".") {
+			genres = append(genres, genreDirs[i].Name())
+		}
+
 	}
 
 	return genres
