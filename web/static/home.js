@@ -11,14 +11,14 @@ $.get( "/genres", function( data ) {
 $.get( "/current", function( data ) {
 
   if (data.length > 0) {
-    $('.current-downloads').append("<tr><th>Status</th><th>URL</th><th>Genre</th><tr>")
+    $('.current-downloads').append("<tr><th>Status</th><th>Genre</th><th>URL</th><tr>")
   }
 
   for (i=0; i<data.length; i++) {
     status = data[i].Status
     genre = data[i].Genre
     id = data[i].Id
-    $('.current-downloads').append(`<tr><td>${status}</td><td>${genre}</td><td>${id}</td></tr>`);
+    $('.current-downloads').append(`<tr><td>${status}</td><td>${genre}</td><td>youtube.com/watch?v=${id}</td></tr>`);
   }
 });
 
