@@ -8,6 +8,11 @@ import (
 
 // Take a ytId and return a full YouTube Video URL
 func CreateYTUrl(ytId string) string {
+
+	if strings.Contains(ytId, "watch?v=") {
+		return ytId
+	}
+
 	return fmt.Sprintf("https://www.youtube.com/watch?v=%s", ytId)
 }
 
