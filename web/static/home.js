@@ -18,8 +18,13 @@ $.get( "/current", function( data ) {
     status = data[i].Status
     genre = data[i].Genre
     id = data[i].Id
+    if id.includes("youtube") {
+        $('.current-downloads').append(`<tr><td>${status}</td><td>${genre}</td><td>${id}</td></tr>`);
+    } else {
     $('.current-downloads').append(`<tr><td>${status}</td><td>${genre}</td><td>youtube.com/watch?v=${id}</td></tr>`);
-  }
+        }
+
+    }
 });
 
 // Get the full history of all downloaded files
