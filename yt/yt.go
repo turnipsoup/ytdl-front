@@ -9,11 +9,17 @@ import (
 // Take a ytId and return a full YouTube Video URL
 func CreateYTUrl(ytId string) string {
 
-	if strings.Contains(ytId, "watch?v=") {
+	if strings.Contains(ytId, "youtu") {
 		return ytId
 	}
 
 	return fmt.Sprintf("https://www.youtube.com/watch?v=%s", ytId)
+}
+
+// Parse YouTube URL and return just the ID.
+// If passed just an ID, just return that same ID.
+func ParseYouTubeURL(inp string) string {
+	// todo!
 }
 
 // Download the audio of the passed YouTube URL

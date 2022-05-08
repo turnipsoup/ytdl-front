@@ -18,7 +18,13 @@ $.get( "/current", function( data ) {
     status = data[i].Status
     genre = data[i].Genre
     id = data[i].Id
-    $('.current-downloads').append(`<tr><td>${status}</td><td>${genre}</td><td>youtube.com/watch?v=${id}</td></tr>`);
+    urlStr = "youtube.com/watch?v="
+
+    if (id.contains("youtu")) {
+      urlStr = ""  
+    }
+
+    $('.current-downloads').append(`<tr><td>${status}</td><td>${genre}</td><td>${urlStr}${id}</td></tr>`);
   }
 });
 
