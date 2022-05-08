@@ -90,7 +90,7 @@ func main() {
 			return
 		}
 
-		ytId := r.Form["yt-id"][0]
+		ytId := yt.ParseYouTubeURL(r.Form["yt-id"][0])
 		genre := r.Form["genre"][0]
 
 		// Insert our record

@@ -19,7 +19,20 @@ func CreateYTUrl(ytId string) string {
 // Parse YouTube URL and return just the ID.
 // If passed just an ID, just return that same ID.
 func ParseYouTubeURL(inp string) string {
-	// todo!
+	if strings.Contains(inp, "/") {
+
+		if strings.Contains(inp, "v=") {
+			splitStr := strings.Split(inp, "v=")
+			return splitStr[len(splitStr)-1]
+		} else {
+			splitStr := strings.Split(inp, "/")
+			return splitStr[len(splitStr)-1]
+		}
+
+	}
+
+	// If nothing else matches, it must be a plain ID
+	return inp
 }
 
 // Download the audio of the passed YouTube URL

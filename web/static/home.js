@@ -20,10 +20,6 @@ $.get( "/current", function( data ) {
     id = data[i].Id
     urlStr = "youtube.com/watch?v="
 
-    if (id.contains("youtu")) {
-      urlStr = ""  
-    }
-
     $('.current-downloads').append(`<tr><td>${status}</td><td>${genre}</td><td>${urlStr}${id}</td></tr>`);
   }
 });
