@@ -18,10 +18,11 @@ $.get( "/current", function( data ) {
     status = data[i].Status
     genre = data[i].Genre
     id = data[i].Id
-    if id.includes("youtube") {
-        $('.current-downloads').append(`<tr><td>${status}</td><td>${genre}</td><td>${id}</td></tr>`);
+    if (id.includes("youtube")) {
+        $('.current-downloads').append(`<tr><td>${status}</td><td>${genre}</td><td><a href='${id}'>${id}</a></td></tr>`);
     } else {
-    $('.current-downloads').append(`<tr><td>${status}</td><td>${genre}</td><td>youtube.com/watch?v=${id}</td></tr>`);
+      var ytl = `youtube.com/watch?v=${id}`
+    $('.current-downloads').append(`<tr><td>${status}</td><td>${genre}</td><td><a href='https://${ytl}'>${ytl}</a></td></tr>`);
         }
 
     }
