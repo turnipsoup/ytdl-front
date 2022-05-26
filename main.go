@@ -59,7 +59,6 @@ func main() {
 	log.Print("Starting application")
 
 	config := getConfiguration()
-
 	// Initialize the DB "connection"
 	yt.OpenDatabaseInit(config.DBLocation)
 	yt.GetAllDownloads(config.DBLocation)
@@ -91,7 +90,7 @@ func main() {
 			return
 		}
 
-		ytId := r.Form["yt-id"][0]
+		ytId := yt.ParseYouTubeURL(r.Form["yt-id"][0])
 		genre := r.Form["genre"][0]
 
 		// Insert our record
