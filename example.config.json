@@ -1,0 +1,4 @@
+{
+    "storage_root": "/tmp/testing/",
+    "db_location": "./ytdl_front.db"
+}

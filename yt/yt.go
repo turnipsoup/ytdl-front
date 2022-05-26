@@ -41,7 +41,7 @@ func DownloadVideoAudio(dbLoc string, ytId string, rootDirectory string, genre s
 	url := CreateYTUrl(ytId)
 
 	// If the user passes an entire YouTube URL, accept that instead
-	if strings.Contains(ytId, "v=") {
+	if strings.Contains(ytId, "youtu") {
 		url = ytId
 	}
 
