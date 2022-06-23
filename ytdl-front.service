@@ -1,0 +1,15 @@
+[Unit]
+Description=YouTubeDL Front
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+User=jeremy
+Restart=always
+RestartSec=1
+WorkingDirectory=/opt/ytdl-front
+ExecStart=/opt/ytdl-front/ytdl-front
+
+[Install]
+WantedBy=multi-user.target
